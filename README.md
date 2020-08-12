@@ -17,3 +17,5 @@ It is possible to get information about a train from the following endpoint: GET
 For testing you can find trains that have recently departed from Helsinki station by querying https://rata.digitraffic.fi/api/v1/live-trains/station/HKI?arrived_trains=0&arriving_trains=0&departed_trains=20&departing_trains=0&include_nonstopping=false
 
 Digitraffic uses station short codes that are three character long identifier (e.g, HKI = Helsinki). Your location service can return the location using the same station short codes.
+
+For swagger documentation of the implemented Train REST API see: http://localhost:8080/swagger-ui/
