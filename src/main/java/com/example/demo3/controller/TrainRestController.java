@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api")
 @RestController
 public class TrainRestController {
 
@@ -20,17 +19,13 @@ public class TrainRestController {
 
     @ApiOperation(value = "GET location of train. {id} is the train number.",
             notes="example: http://localhost:8080/api/trains/8448 ")
-    @GetMapping(value = "/trains/{id}")
+    @GetMapping(value = "/api/trains/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Result getTrain(@PathVariable("id") Long id) throws Exception {
 
         Train train = trainService.getTrainById(id);
-
         return new Result(train);
-
-
     }
-
 }
 
 

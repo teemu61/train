@@ -29,6 +29,10 @@ public class Result {
     @JsonIgnore
     private TimeTableRow lastestArrival;
 
+    /**
+     * Since REST Api data contains entries with actualTime = null, all
+     * analysis is based on scheduledTime parameter.
+     */
     public Result(Train train) {
 
         now = train.getNow();
@@ -41,7 +45,7 @@ public class Result {
         if (lastestArrival != null && nextDeparture == null) {
 
             this.currentStation = lastestArrival.stationShortCode;
-            this.arrival = lastestArrival.actualTime;
+            this.arrival = lastestArrival.getScheduledTime();
             this.currentTime = parseDate(now);
             log.info("no departure found");
 
@@ -53,15 +57,15 @@ public class Result {
 
             if (lastestArrival.getStationShortCode().equals(nextDeparture.getStationShortCode())) {
                 this.currentStation = lastestArrival.stationShortCode;
-                this.arrival = lastestArrival.actualTime;
+                this.arrival = lastestArrival.getScheduledTime();
                 this.currentTime = parseDate(now);
                 log.info("train is currently on station " +lastestArrival.getStationShortCode());
 
             } else {
                 this.fromStation = lastestArrival.getStationShortCode();
                 this.toStation = nextDeparture.getStationShortCode();
-                this.arrival = lastestArrival.getActualTime();
-                this.departure = nextDeparture.actualTime;
+                this.arrival = lastestArrival.getScheduledTime();
+                this.departure = nextDeparture.getScheduledTime();
                 this.currentTime = parseDate(now);
                 log.info(String.format("train is currently between stations %s and %s",
                         lastestArrival.stationShortCode, nextDeparture.stationShortCode));
@@ -71,7 +75,7 @@ public class Result {
 
     private void findNextDeparture(List<TimeTableRow> departures) {
         for (TimeTableRow row : departures) {
-            LocalDateTime date = parseStr(row.getActualTime());
+            LocalDateTime date = parseStr(row.getScheduledTime());
             if (date.isAfter(now)) {
                 this.nextDeparture = row;
                 break;
@@ -81,7 +85,7 @@ public class Result {
 
     private void findLatestArrival(List<TimeTableRow> arrivals) {
         for (TimeTableRow row: arrivals) {
-            LocalDateTime date = parseStr(row.getActualTime());
+            LocalDateTime date = parseStr(row.getScheduledTime());
             if (date.isBefore(now)) {
                 this.lastestArrival = row;
             }

@@ -34,7 +34,7 @@ public class Train {
         List<TimeTableRow> arrivals = this.getTimeTableRows()
                 .stream()
                 .filter(i -> i.type.equals("ARRIVAL"))
-                .sorted(Comparator.comparing(TimeTableRow::getActualTime))
+                .sorted(Comparator.comparing(TimeTableRow::getScheduledTime))
                 .collect(Collectors.toList());
         return arrivals;
     }
@@ -44,7 +44,7 @@ public class Train {
         List<TimeTableRow> departures = this.getTimeTableRows()
                 .stream()
                 .filter(i -> i.type.equals("DEPARTURE"))
-                .sorted(Comparator.comparing(TimeTableRow::getActualTime))
+                .sorted(Comparator.comparing(TimeTableRow::getScheduledTime))
                 .collect(Collectors.toList());
         return departures;
     }
