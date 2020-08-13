@@ -21,6 +21,8 @@ public class TrainMapper {
     private LocalDateTime now;
     private TimeTableRow nextDeparture;
     private TimeTableRow lastestArrival;
+    private TrainDTO trainDTO = new TrainDTO();
+    private Train train;
 
     public TrainMapper() {
         now = LocalDateTime.now();
@@ -28,47 +30,50 @@ public class TrainMapper {
 
     public TrainDTO trainToTrainDto(Train train) {
 
-        if (train == null)
+        if (train == null) {
             return null;
+        } else {
+            this.train = train;
+        }
 
-        TrainDTO trainDTO = new TrainDTO();
-        findLatestArrival(train);
-        findNextDeparture(train);
+        findLatestArrival();
+        findNextDeparture();
 
         if (lastestArrival != null && nextDeparture == null) {
-
-            trainDTO.setCurrentStation(lastestArrival.stationShortCode);
-            trainDTO.setArrival(lastestArrival.getScheduledTime());
-            trainDTO.setCurrentTime(parseDate(now));
-            log.info("no departure found");
+            log.info("only latestArrival found. nextDeparture was null");
+            updateTrainInCurrentStation();
         }
 
         if (lastestArrival != null && nextDeparture != null) {
-
-            log.info("arrival and departure found");
-
             if (lastestArrival.getStationShortCode().equals(nextDeparture.getStationShortCode())) {
-                trainDTO.setCurrentStation(lastestArrival.stationShortCode);
-                trainDTO.setArrival(lastestArrival.getScheduledTime());
-                trainDTO.setCurrentTime(parseDate(now));
-                log.info("train is currently on station " +lastestArrival.getStationShortCode());
-
+                updateTrainInCurrentStation();
             } else {
-                trainDTO.setFromStation(lastestArrival.getStationShortCode());
-                trainDTO.setToStation(nextDeparture.getStationShortCode());
-                trainDTO.setArrival(lastestArrival.getScheduledTime());
-                trainDTO.setDeparture(nextDeparture.getScheduledTime());
-                trainDTO.setCurrentTime(parseDate(now));
-                log.info(String.format("train is currently between stations %s and %s",
-                        lastestArrival.stationShortCode, nextDeparture.stationShortCode));
+                updateTrainBetweenStations();
             }
          }
         return trainDTO;
     }
 
-    private void findNextDeparture(Train train) {
+    private void updateTrainBetweenStations() {
+        log.info(String.format("train is currently between stations %s and %s",
+                lastestArrival.stationShortCode, nextDeparture.stationShortCode));
+        trainDTO.setFromStation(lastestArrival.getStationShortCode());
+        trainDTO.setToStation(nextDeparture.getStationShortCode());
+        trainDTO.setArrival(lastestArrival.getScheduledTime());
+        trainDTO.setDeparture(nextDeparture.getScheduledTime());
+        trainDTO.setCurrentTime(parseDate(now));
+    }
 
-        List<TimeTableRow> departures = getDepartures(train);
+    private void updateTrainInCurrentStation() {
+        log.info("train is currently on station " +lastestArrival.getStationShortCode());
+        trainDTO.setCurrentStation(lastestArrival.stationShortCode);
+        trainDTO.setArrival(lastestArrival.getScheduledTime());
+        trainDTO.setCurrentTime(parseDate(now));
+    }
+
+    private void findNextDeparture() {
+
+        List<TimeTableRow> departures = getDepartures();
 
         for (TimeTableRow row : departures) {
             LocalDateTime date = parseStr(row.getScheduledTime());
@@ -79,9 +84,9 @@ public class TrainMapper {
         }
     }
 
-    private void findLatestArrival(Train train) {
+    private void findLatestArrival() {
 
-        List<TimeTableRow> arrivals = getArrivals(train);
+        List<TimeTableRow> arrivals = getArrivals();
 
         for (TimeTableRow row: arrivals) {
             LocalDateTime date = parseStr(row.getScheduledTime());
@@ -91,7 +96,7 @@ public class TrainMapper {
         }
     }
 
-    private List<TimeTableRow>  getArrivals(Train train) {
+    private List<TimeTableRow>  getArrivals() {
 
         List<TimeTableRow> arrivals = train.getTimeTableRows()
                 .stream()
@@ -102,7 +107,7 @@ public class TrainMapper {
         return arrivals;
     }
 
-    private List<TimeTableRow> getDepartures(Train train) {
+    private List<TimeTableRow> getDepartures() {
 
         List<TimeTableRow> departures = train.getTimeTableRows()
                 .stream()
