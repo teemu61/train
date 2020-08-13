@@ -26,27 +26,5 @@ public class Train {
     String timetableType;
     String timetableAcceptanceDate;
     List<TimeTableRow> timeTableRows;
-//    @JsonIgnore
-//    LocalDateTime now = LocalDateTime.now();
-
-//    public List<TimeTableRow>  getArrivals() {
-//
-//        List<TimeTableRow> arrivals = this.getTimeTableRows()
-//                .stream()
-//                .filter(i -> i.type.equals("ARRIVAL"))
-//                .sorted(Comparator.comparing(TimeTableRow::getScheduledTime))
-//                .collect(Collectors.toList());
-//        return arrivals;
-//    }
-//
-//    public List<TimeTableRow>  getDepartures() {
-//
-//        List<TimeTableRow> departures = this.getTimeTableRows()
-//                .stream()
-//                .filter(i -> i.type.equals("DEPARTURE"))
-//                .sorted(Comparator.comparing(TimeTableRow::getScheduledTime))
-//                .collect(Collectors.toList());
-//        return departures;
-//    }
 
 }
