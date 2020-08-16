@@ -15,15 +15,9 @@ import java.time.Month;
 
 import static org.junit.Assert.*;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class TrainApplicationTests {
 
-//    @Before
-//    public void setUp() throws IOException {
-//        MockitoAnnotations.initMocks(this);
-//    }
 
     private Train initTrainInstance() throws IOException {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
@@ -50,6 +44,26 @@ public class TrainApplicationTests {
         assertNotNull(trainDTO);
         assertEquals("STA1", trainDTO.getFromStation());
         assertEquals("STA2", trainDTO.getToStation());
+        assertEquals("between_stations", trainDTO.getStatus());
+    }
+
+    @Test
+    public void testTrainAtLastStation() throws IOException {
+
+        //given
+        LocalDateTime NOW = LocalDateTime.of(2020,
+                Month.JANUARY, 23, 07, 22, 00);
+        Train train = initTrainInstance();
+        TrainMapper mapper = new TrainMapper();
+        mapper.setNow(NOW);
+
+        //when
+        TrainDTO trainDTO = mapper.trainToTrainDto(train);
+
+        //then
+        assertNotNull(trainDTO);
+        assertEquals("STA3", trainDTO.getCurrentStation());
+        assertEquals("last_station", trainDTO.getStatus());
     }
 
     @Test
@@ -69,5 +83,7 @@ public class TrainApplicationTests {
         assertNotNull(trainDTO);
         assertEquals("STA1", trainDTO.getCurrentStation());
     }
+
+
 
 }
