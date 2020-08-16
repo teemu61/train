@@ -25,7 +25,7 @@ public class TrainRestController {
 
     @ApiOperation(
             value = "GET location of train. {id} is the train number.",
-            notes="example: http://localhost:8080/api/trains/8448 "
+            notes = "used for production"
     )
     @GetMapping(value = "/api/trains/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)

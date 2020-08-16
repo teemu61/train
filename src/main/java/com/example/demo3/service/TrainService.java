@@ -17,14 +17,14 @@ import java.util.List;
 @Service
 public class TrainService {
 
+    private static final String BASE_URL = "https://rata.digitraffic.fi/api/v1";
 
     public Train getTrainById(Long id) {
 
         LocalDate today = LocalDate.now();
-        String url = String.format("https://rata.digitraffic.fi/api/v1/trains/%s/%s", today, id);
+        String url = String.format("%s/trains/%s/%s", BASE_URL, today, id);
 
         RestTemplate restTemplate = getRestTemplate();
-        getHeaders();
 
         Train[] trains = restTemplate.getForObject(url,Train[].class);
         if (trains == null || trains.length == 0)
@@ -34,15 +34,14 @@ public class TrainService {
 
     public List<TrainSummary> getTrainSummary() {
 
-        String url = "https://rata.digitraffic.fi/api/v1/live-trains/station/" +
-                "HKI?arrived_trains=0&arriving_trains=0&departed_trains=20&departing_trains=0" +
+        String url = BASE_URL +"/live-trains/station/HKI?arrived_trains=0" +
+                "&arriving_trains=0&departed_trains=20&departing_trains=0" +
                 "&include_nonstopping=false";
 
         RestTemplate restTemplate = getRestTemplate();
-        getHeaders();
 
-         TrainSummary[] trains = restTemplate.getForObject(url,TrainSummary[].class);
-         return Arrays.asList(trains);
+        TrainSummary[] trains = restTemplate.getForObject(url,TrainSummary[].class);
+        return Arrays.asList(trains);
      }
 
     public List<Train> getTrains() {
@@ -59,12 +58,6 @@ public class TrainService {
         return trainList;
     }
 
-    private void getHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("accept-encoding", "application/gzip");
-    }
-
     private RestTemplate getRestTemplate() {
 
         /*clientHttpRequestFactory supports gzip*/
@@ -73,5 +66,5 @@ public class TrainService {
         return new RestTemplate(clientHttpRequestFactory);
     }
 
-    }
+}
 
