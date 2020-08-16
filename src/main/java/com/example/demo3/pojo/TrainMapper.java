@@ -90,6 +90,7 @@ public class TrainMapper {
     private void findNextDeparture() {
 
         List<TimeTableRow> departures = getDepartures();
+        this.setNextDeparture(null);
 
         for (TimeTableRow row : departures) {
             LocalDateTime date = parseStr(row.getScheduledTime());
@@ -103,6 +104,7 @@ public class TrainMapper {
     private void findLatestArrival() {
 
         List<TimeTableRow> arrivals = getArrivals();
+        this.lastestArrival = null;
 
         for (TimeTableRow row: arrivals) {
             LocalDateTime date = parseStr(row.getScheduledTime());
