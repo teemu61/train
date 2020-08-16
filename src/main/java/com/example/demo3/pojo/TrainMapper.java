@@ -60,8 +60,8 @@ public class TrainMapper {
                 lastestArrival.stationShortCode, nextDeparture.stationShortCode));
         trainDTO.setFromStation(lastestArrival.getStationShortCode());
         trainDTO.setToStation(nextDeparture.getStationShortCode());
-        trainDTO.setArrival(lastestArrival.getScheduledTime());
-        trainDTO.setDeparture(nextDeparture.getScheduledTime());
+        trainDTO.setDeparture(lastestArrival.getScheduledTime());
+        trainDTO.setArrival(nextDeparture.getScheduledTime());
         trainDTO.setTrainNumber(train.trainNumber);
         trainDTO.setCurrentTime(parseDate(now));
 
@@ -71,6 +71,8 @@ public class TrainMapper {
         log.info("train is currently on station " +lastestArrival.getStationShortCode());
         trainDTO.setCurrentStation(lastestArrival.stationShortCode);
         trainDTO.setArrival(lastestArrival.getScheduledTime());
+        if (nextDeparture != null)
+            trainDTO.setDeparture(nextDeparture.getScheduledTime());
         trainDTO.setTrainNumber(train.trainNumber);
         trainDTO.setCurrentTime(parseDate(now));
     }
