@@ -7,6 +7,7 @@ import lombok.Data;
 public class TrainDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long trainNumber;
+    private String status;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String currentStation;
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -41,8 +41,7 @@ public class TrainMapper {
         findNextDeparture();
 
         if (lastestArrival != null && nextDeparture == null) {
-            log.info("only latestArrival found. nextDeparture was null");
-            updateTrainInCurrentStation();
+            updateTrainInLastStation();
         }
 
         if (lastestArrival != null && nextDeparture != null) {
@@ -64,6 +63,7 @@ public class TrainMapper {
         trainDTO.setArrival(nextDeparture.getScheduledTime());
         trainDTO.setTrainNumber(train.trainNumber);
         trainDTO.setCurrentTime(parseDate(now));
+        trainDTO.setStatus("between_stations");
 
     }
 
@@ -71,10 +71,19 @@ public class TrainMapper {
         log.info("train is currently on station " +lastestArrival.getStationShortCode());
         trainDTO.setCurrentStation(lastestArrival.stationShortCode);
         trainDTO.setArrival(lastestArrival.getScheduledTime());
-        if (nextDeparture != null)
-            trainDTO.setDeparture(nextDeparture.getScheduledTime());
+        trainDTO.setDeparture(nextDeparture.getScheduledTime());
         trainDTO.setTrainNumber(train.trainNumber);
         trainDTO.setCurrentTime(parseDate(now));
+        trainDTO.setStatus("in_station");
+    }
+
+    private void updateTrainInLastStation() {
+        log.info("train is currently on station " +lastestArrival.getStationShortCode());
+        trainDTO.setCurrentStation(lastestArrival.stationShortCode);
+        trainDTO.setArrival(lastestArrival.getScheduledTime());
+        trainDTO.setTrainNumber(train.trainNumber);
+        trainDTO.setCurrentTime(parseDate(now));
+        trainDTO.setStatus("last_station");
     }
 
     private void findNextDeparture() {
