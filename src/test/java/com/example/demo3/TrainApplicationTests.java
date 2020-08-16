@@ -44,7 +44,7 @@ public class TrainApplicationTests {
         mapper.setNow(NOW);
 
         //when
-        TrainDTO trainDTO = mapper.trainToTrainDto(train, 2L);
+        TrainDTO trainDTO = mapper.trainToTrainDto(train);
 
         //then
         assertNotNull(trainDTO);
@@ -63,7 +63,7 @@ public class TrainApplicationTests {
         mapper.setNow(NOW);
 
         //when
-        TrainDTO trainDTO = mapper.trainToTrainDto(train, 2L);
+        TrainDTO trainDTO = mapper.trainToTrainDto(train);
 
         //then
         assertNotNull(trainDTO);

@@ -21,20 +21,21 @@ public class TrainMapper {
     private LocalDateTime now;
     private TimeTableRow nextDeparture;
     private TimeTableRow lastestArrival;
-    private TrainDTO trainDTO = new TrainDTO();
+    private TrainDTO trainDTO;
     private Train train;
 
     public TrainMapper() {
         now = LocalDateTime.now();
     }
 
-    public TrainDTO trainToTrainDto(Train train, Long id) {
+    public TrainDTO trainToTrainDto(Train train) {
+
+        trainDTO = new TrainDTO();
 
         if (train == null) {
             return null;
         } else {
             this.train = train;
-            this.train.setTrainNumber(id);
         }
 
         findLatestArrival();

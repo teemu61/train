@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,6 +44,20 @@ public class TrainService {
          TrainSummary[] trains = restTemplate.getForObject(url,TrainSummary[].class);
          return Arrays.asList(trains);
      }
+
+    public List<Train> getTrains() {
+
+        List<Train> trainList = new ArrayList<>();
+        List<TrainSummary> trainSummaryList = getTrainSummary();
+
+        for (TrainSummary summary: trainSummaryList) {
+            String trainNumber = summary.getTrainNumber();
+            Train train = getTrainById(Long.parseLong(trainNumber));
+
+            trainList.add(train);
+        }
+        return trainList;
+    }
 
     private void getHeaders() {
         HttpHeaders headers = new HttpHeaders();
