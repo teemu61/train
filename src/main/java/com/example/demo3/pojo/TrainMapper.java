@@ -28,12 +28,13 @@ public class TrainMapper {
         now = LocalDateTime.now();
     }
 
-    public TrainDTO trainToTrainDto(Train train) {
+    public TrainDTO trainToTrainDto(Train train, Long id) {
 
         if (train == null) {
             return null;
         } else {
             this.train = train;
+            this.train.setTrainNumber(id);
         }
 
         findLatestArrival();
@@ -61,13 +62,16 @@ public class TrainMapper {
         trainDTO.setToStation(nextDeparture.getStationShortCode());
         trainDTO.setArrival(lastestArrival.getScheduledTime());
         trainDTO.setDeparture(nextDeparture.getScheduledTime());
+        trainDTO.setTrainNumber(train.trainNumber);
         trainDTO.setCurrentTime(parseDate(now));
+
     }
 
     private void updateTrainInCurrentStation() {
         log.info("train is currently on station " +lastestArrival.getStationShortCode());
         trainDTO.setCurrentStation(lastestArrival.stationShortCode);
         trainDTO.setArrival(lastestArrival.getScheduledTime());
+        trainDTO.setTrainNumber(train.trainNumber);
         trainDTO.setCurrentTime(parseDate(now));
     }
 

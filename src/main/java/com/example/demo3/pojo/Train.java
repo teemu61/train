@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Data
 public class Train {
 
-    String trainNumber;
+    Long trainNumber;
     String departureDate;
     Integer operatorUICCode;
     String trainType;
