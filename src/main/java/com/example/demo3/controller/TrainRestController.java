@@ -5,10 +5,11 @@ import com.example.demo3.pojo.TrainDTO;
 import com.example.demo3.pojo.Train;
 import com.example.demo3.pojo.TrainMapper;
 import com.example.demo3.pojo.TrainSummary;
+import com.example.demo3.service.LocationService;
 import com.example.demo3.service.TrainService;
+import com.example.demo3.service.TrainServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,9 +19,11 @@ import java.util.List;
 public class TrainRestController {
 
     TrainService trainService;
+    LocationService locationService;
 
-    TrainRestController(TrainService trainService) {
+    TrainRestController(TrainServiceImpl trainService, LocationService locationService) {
         this.trainService = trainService;
+        this.locationService = locationService;
     }
 
     @ApiOperation(
@@ -31,10 +34,7 @@ public class TrainRestController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TrainDTO getTrain(@PathVariable("id")  Long id) throws Exception {
 
-        Train train = trainService.getTrainById(id);
-        TrainMapper mapper = new TrainMapper();
-        TrainDTO trainDTO = mapper.trainToTrainDto(train);
-        return trainDTO;
+        return locationService.getTrainDtoById(id);
     }
 
     @ApiOperation(
@@ -45,8 +45,7 @@ public class TrainRestController {
     @ResponseStatus(HttpStatus.OK)
     public  List<TrainSummary> getTrainSummary() {
 
-        List<TrainSummary> trains = trainService.getTrainSummary();
-        return trains;
+        return  locationService.getTrainSummaryList();
     }
 
     @ApiOperation(
@@ -55,16 +54,13 @@ public class TrainRestController {
     )
     @GetMapping(value = "/api/trains/list")
     public List<TrainDTO> getTrains() {
-        List<Train> trains = trainService.getTrains();
-        List<TrainDTO> trainDTOS = new ArrayList<>();
 
-        TrainMapper mapper = new TrainMapper();
-        trains.forEach(train -> trainDTOS.add(mapper.trainToTrainDto(train)));
-        return trainDTOS;
+        return locationService.getTrainDtoList();
     }
 
     @ExceptionHandler({ NoTrainsFoundException.class })
     public String handleException(Exception exception) {
+
         return exception.getMessage();
     }
 
