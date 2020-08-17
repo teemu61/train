@@ -118,6 +118,7 @@ public class TrainMapper {
 
         List<TimeTableRow> arrivals = train.getTimeTableRows()
                 .stream()
+                .filter(i -> i.trainStopping != false)
                 .filter(i -> i.type.equals("ARRIVAL"))
                 .sorted(Comparator.comparing(TimeTableRow::getScheduledTime))
                 .collect(Collectors.toList());
@@ -129,6 +130,7 @@ public class TrainMapper {
 
         List<TimeTableRow> departures = train.getTimeTableRows()
                 .stream()
+                .filter(i -> i.trainStopping != false)
                 .filter(i -> i.type.equals("DEPARTURE"))
                 .sorted(Comparator.comparing(TimeTableRow::getScheduledTime))
                 .collect(Collectors.toList());
