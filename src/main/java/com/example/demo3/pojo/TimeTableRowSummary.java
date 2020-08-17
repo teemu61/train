@@ -10,4 +10,5 @@ public class TimeTableRowSummary {
     String stationShortCode;
     String type;
     String scheduledTime;
+    Boolean trainStopping;
 }

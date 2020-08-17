@@ -1,6 +1,7 @@
 package com.example.demo3.service;
 
 import com.example.demo3.exception.NoTrainsFoundException;
+import com.example.demo3.pojo.TimeTableRowSummary;
 import com.example.demo3.pojo.Train;
 import com.example.demo3.pojo.TrainSummary;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainService {
@@ -39,9 +41,19 @@ public class TrainService {
                 "&include_nonstopping=false";
 
         RestTemplate restTemplate = getRestTemplate();
-
         TrainSummary[] trains = restTemplate.getForObject(url,TrainSummary[].class);
-        return Arrays.asList(trains);
+        List<TrainSummary> trainList = Arrays.asList(trains);
+        List<TrainSummary> trainListFiltered = new ArrayList<>();
+
+        for (TrainSummary summary: trainList) {
+            List<TimeTableRowSummary> rowListFilted = summary.getTimeTableRows()
+                    .stream()
+                    .filter(i -> i.getTrainStopping() != false)
+                    .collect(Collectors.toList());
+            summary.setTimeTableRows(rowListFilted);
+            trainListFiltered.add(summary);
+        }
+        return trainListFiltered;
      }
 
     public List<Train> getTrains() {
